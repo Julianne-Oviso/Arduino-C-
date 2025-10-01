@@ -1,6 +1,5 @@
 //my code
 const int buttonPin = 2;
-int pressCount = 0;
 
 //track button state
 bool buttonPressed = false;
@@ -22,9 +21,7 @@ void loop() {
   }
   
   // Button pressed!
-  pressCount++; 
   Serial.println("Object Detected & Present");
-  Serial.println(pressCount);
   
   // Wait for "break" (button release: LOW -> HIGH) 
   while(digitalRead(buttonPin)== LOW) {
@@ -33,4 +30,4 @@ void loop() {
   
   //Button released 
   Serial.println("Detected Object Is Gone");
-}
+} 
