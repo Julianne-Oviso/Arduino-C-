@@ -1,0 +1,62 @@
+#include <Servo.h>
+
+Servo myServo;
+
+const int trigPin = 9;
+const int echoPin = 10;
+const int ledPin = 13;
+
+long duration;
+int distance;
+int safetyDistance;
+
+const int ldrPin = A0;     // Photoresistor connected to A0
+const int servoPin = 8;    // Servo signal pin
+int threshold = 500;       // Adjust this based on lighting
+
+void setup() {
+  myServo.attach(servoPin);
+  myServo.write(0);        // Start at 0 degrees
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  distance= duration*0.034/2;
+
+  safetyDistance = distance;
+  if (safetyDistance <= 5){
+    digitalWrite(ledPin, HIGH);
+    Serial.print("object sensed");
+  }
+  else{
+    digitalWrite(ledPin, LOW);
+    Serial.print("object not sensed");
+  }
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  int lightValue = analogRead(ldrPin);
+  Serial.println(lightValue);
+
+  if (lightValue < threshold) {
+    // Light blocked or dark
+    myServo.write(90);
+  } else {
+    // Bright light
+    myServo.write(180);
+  }
+
+  delay(100);
+}
